@@ -74,17 +74,14 @@ void TRibbon::CheckMissingOtherCell(TCell& Cell) {
 
 /*******************************************************************************/
 bool TRibbon::CheckMissingCellinOtherLines(TCell& Cell) {
-	TLine * MisLine{ nullptr };
-	for (auto& e : RvLines) {
-		TLine Line(*e);
-		auto itl = find_if(Line.Cells.begin(), Line.Cells.end(), [&](auto& li) {
-			return li->Digit.No == Cell.Digit.No;        });
-		if (itl == Line.Cells.end()) {
-			if (MisLine == nullptr) MisLine = e;
-			else return false;
-		}
-	}
-	return true;
+	auto count = count_if(RvLines.begin(), RvLines.end(),
+		[&](auto & eLn) {
+			TLine& Ln{ *eLn };
+			auto it = find_if(Ln.Cells.begin(), Ln.Cells.end(), [&](auto& ec) {
+				return ec->Digit.No == Cell.Digit.No;  });
+			return it != eLn->Cells.end();
+		});
+	return count == 1;
 }
 /*******************************************************************************/
 void TRibbon::CheckMissingCellinOtherBoxes(TCell& Cell) {
@@ -110,7 +107,7 @@ void TRibbon::CheckMissingThirdDigit(const Uint& n) {
 		});
 		return itc == Line.Cells.end();
 	});
-	TLine& Ln = **it;
+	TLine& Ln{ **it };
 	auto itb = find_if(vpBoxes.begin(), vpBoxes.end(), [&](auto& eb) {
 		auto itc = find_if(eb->Cells.begin(), eb->Cells.end(), [&](auto& ei) {
 			return ei->Digit.No == Digit.No;
