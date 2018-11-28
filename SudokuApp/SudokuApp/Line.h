@@ -8,7 +8,7 @@
 /******************************************************************************/
 struct TLine {
 				~TLine() { }
-				TLine(TSudoku *O, TRw *l, Uint  n_, TLineType t) noexcept;
+				TLine(TSudoku *O, TRw &l, Uint  n_, TLineType t) noexcept;
 friend ostream& operator<<(ostream& os, const TLine& v);
 		   void AddCell(TCell *Item);
 		   void Solution();

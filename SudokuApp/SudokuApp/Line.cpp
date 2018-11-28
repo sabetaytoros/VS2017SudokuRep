@@ -7,15 +7,15 @@
 
 extern const char* str[];
 
-/******************************************************************/
+/**************************************************************************/
 ostream& operator<<(ostream& os, const TLine& v) {
 	os << str[v.lt] << v.No << endl;
 	for (auto& e : v.Cells)
 		cout << *e;
 	return os;
 }
+/**************************************************************************/
 namespace SudokuApp {
-	/**************************************************************************/
 	void PrintRows(const TvsLine& Rows) {
 		for (auto k = 0u; k < two; ++k) {
 			cout << endl << (k == 0 ? " Rows " : " Columns ") << endl;
@@ -23,12 +23,10 @@ namespace SudokuApp {
 				cout << *e << endl;
 		}
 	}
-
 }
-
 /****************************************************************************/
-TLine::TLine(TSudoku *O, TRw *l, Uint n_, TLineType t) noexcept
-	: Osdk{ *O }, RwData{ *l }, No{ n_ }, lt{ t }    {
+TLine::TLine(TSudoku *O, TRw &l, Uint n_, TLineType t) noexcept
+	: Osdk{ *O }, RwData( l ) , No{ n_ }, lt{ t }    {
 	auto m = (lt == ltr) ? No / tree * tree : No / tree;
 	for (Uint i = 0; i < 3; i++) {
 		LnBoxes.push_back(&Osdk.Boxes[m]);
@@ -44,10 +42,11 @@ TvUint TLine::GenerateMisCellVect() {
 			vMisCellNo.emplace_back(i);
 	}
 	if (vMisCellNo.size() + Cells.size() != nine) {
-		cout << " vMisCellNo.size() + Cells.size() != dkz Line No ";
-		SudokuApp::PrintLine(RwData);
-		cout << " vMisCellNo  : size() " << vMisCellNo.size() << " vector "; for (auto& e : vMisCellNo) cout << e << " "; cout << endl;
-		cout << " Line Cells vectoru : size () " << Cells.size() << " ";
+		cout << " vMisCellNo.size() + Cells.size() != nine Line No ";
+		SudokuApp::stdPrintArray(RwData);
+		cout << " vMisCell No  : size() " << vMisCellNo.size() << " vector ";
+		for (auto& e : vMisCellNo) cout << e << " "; cout << endl;
+		cout << " vector of Line Cells : size () " << Cells.size() << " ";
 		for (auto& e : Cells) cout << e->Digit.No << " "; cout << endl;
 		SudokuApp::PrintDoubleArray(" Exit 25", Osdk.Mtrx);
 		exit(25);
@@ -104,7 +103,6 @@ bool TLine::InsertMissingCell(TDigit& MisDigit) {
 		}
 		++il;
 	}
-	return false;
 }
 /*******************************************************************************/
 void TLine::Solution() {
@@ -152,13 +150,15 @@ PNewItem TLine::FillTstVectorLineTripleshasMissingCell(TRw& tstV, TDigit& MisCel
 					*it = &MisCell.No;
 		}
 	}
-	auto c = count(tstV.begin(), tstV.end(), [&](auto& et) { return et == nullptr; });
-	if (c == 1) { 
-		auto it = find_if(tstV.begin(), tstV.end(), [&](auto& et) { return et == nullptr; });
-		return make_pair(true, static_cast<Uint> (distance(tstV.begin(), it)) );
-	}	
-	return  make_pair(false, zero);
+	int c = count_if(tstV.begin(), tstV.end(),
+		[&](auto& et) { return et == nullptr; });
+	if (c == 1) {
+		auto it = find_if(tstV.begin(), tstV.end(), [&](auto& et) {return et == nullptr; });
+		return make_pair(true, static_cast<Uint> (distance(tstV.begin(), it)));
+	}
+	return make_pair(false, zero);
 }
+
 /*******************************************************************************/
 bool TLine::TrytoInsertMisingCell(const Uint e, const TvUint& vMisCellNo, const bool v, const TRw& mv) {
 	auto& MisCell = Osdk.Digits[e - 1];

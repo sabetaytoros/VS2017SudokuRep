@@ -32,7 +32,7 @@ struct TDigit {
 	void FindMissingRow(TRw& Row, Uint&  mr); // Visual Studio does not accept auto parameter
 	void InsertFinalCell();
 	bool FillTestRowWithNonCellValues(TRw& Ln, TRw& tstV, Uint mr, TLineType t);
-	bool InsertNewItem(TLoc& lc);
+	bool InsertNewItem(TLoc& lc) ;
 	void InsertFoundLineLocation(const Uint& Ln, const TLineType& lt, TRw& cRow);
 	bool InserttoOneofLocations(const Uint& Ln, const TLineType& lt, TRw& cRow, TvpBox& Box);
 

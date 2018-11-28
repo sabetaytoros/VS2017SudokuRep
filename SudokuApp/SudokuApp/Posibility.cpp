@@ -10,7 +10,7 @@
  /******************************************************************************/
 ostream& operator<<(ostream& os, const TPosibility& v) {
 	os << " Cell No " << (v.Next - 1) << "  { " << v.Lct.x << " , " << v.Lct.y << " } ";
-	os << " Row  No " << v.Row.No << " "; SudokuApp::PrintLine(v.Row.RwData);
+	os << " Row  No " << v.Row.No << " "; SudokuApp::stdPrintArray(v.Row.RwData);
 	
 	//  os << " Clmn "; PrintLine(v.Clm.RwData);
 	// PrintBoxMatrix(v.Box.srMtrx);
